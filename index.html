@@ -69,6 +69,39 @@
             color: #b5cdf6;
             text-decoration: underline;
         }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+                    }
+    .dropbtn {
+        background: none;
+        border: none;
+        color: #ddd;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 1em;
+        cursor: pointer;
+            }
+.dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #353535;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
+        z-index: 1;
+        left: 0;
+                }
+.dropdown-content a {
+        color: #ddd;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+}
+.dropdown-content a:hover {  background-color: #444; }
+.dropdown:hover .dropdown-content {
+  display: block;
+}
     </style>
 </head>
 <body>
@@ -83,7 +116,24 @@
             <a href="#">Notes</a>
         </div>
         <div class="nav-right">
-            <a href="#">Publications</a>
+            <nav>
+  <div class="nav-left">
+    <a href="#">Home</a>
+    <div class="dropdown">
+      <a href="#" class="dropbtn">Publications</a>
+      <div class="dropdown-content">
+        <a href="#">Journal Papers</a>
+        <a href="#">Conference Talks</a>
+        <a href="#">Books</a>
+      </div>
+    </div>
+    <a href="#">Notes</a>
+  </div>
+  <div class="nav-right">
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </div>
+</nav>
             <a href="#">About</a>
             <a href="#">Contact</a>
         </div>
