@@ -1,19 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <title>Map Locator | Case and Point</title>
   <style>
-    body { background: #222; color: #fff; font-family: Arial, sans-serif; margin: 0; }
-    .main-content {
+    body {
+      margin: 0;
+      background: #222;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+    header {
+      padding-left: 40px;
+      background: linear-gradient(to bottom, #222 0%, #444 100%);
+      height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .container {
+      display: flex;
+      align-items: flex-start;
       background: #f7f7f7;
       color: #222;
-      margin: 40px auto 0 auto;
       max-width: 900px;
+      margin: 40px auto 0 auto;
       border-radius: 2px;
       padding: 40px 35px 30px 35px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
     }
-    h2 { margin-top: 0; }
+    #map {
+      height: 300px;
+      width: 400px;
+      border-radius: 4px;
+      border: 1px solid #aaa;
+    }
+    #pac-input {
+      margin-left: 20px;
+      height: 32px;
+      width: 300px;
+      padding: 7px 12px;
+      border-radius: 2px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
   </style>
 </head>
 <body>
@@ -21,9 +53,58 @@
     <h1>Case and Point</h1>
     <p>Explore. Innovate. Create.</p>
   </header>
-  <div class="main-content">
-    <h2>Map Locator</h2>
-    <p>Your map interface can go here!</p>
+  <div class="container">
+    <div id="map"></div>
+    <input id="pac-input" class="controls" type="text" placeholder="Search for places">
   </div>
+  <script>
+    function initAutocomplete() {
+      const map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 37.7749, lng: -122.4194 }, // default: San Francisco
+        zoom: 13,
+        mapTypeId: "roadmap"
+      });
+
+      const input = document.getElementById("pac-input");
+      const searchBox = new google.maps.places.SearchBox(input);
+      map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+      let markers = [];
+
+      map.addListener("bounds_changed", () => {
+        searchBox.setBounds(map.getBounds());
+      });
+
+      searchBox.addListener("places_changed", () => {
+        const places = searchBox.getPlaces();
+
+        if (places.length === 0) return;
+
+        markers.forEach((marker) => marker.setMap(null));
+        markers = [];
+
+        const bounds = new google.maps.LatLngBounds();
+        places.forEach((place) => {
+          if (!place.geometry || !place.geometry.location) return;
+
+          markers.push(
+            new google.maps.Marker({
+              map,
+              title: place.name,
+              position: place.geometry.location
+            })
+          );
+
+          if (place.geometry.viewport) {
+            bounds.union(place.geometry.viewport);
+          } else {
+            bounds.extend(place.geometry.location);
+          }
+        });
+        map.fitBounds(bounds);
+      });
+    }
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA09Ze1PSga8dGFF-4_R0eQD5ZJB-GnfmU&libraries=places&callback=initAutocomplete" async defer></script>
 </body>
 </html>
